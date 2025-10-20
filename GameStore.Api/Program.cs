@@ -34,7 +34,8 @@ List<Game> games = new List<Game>
     }
 };
 
-var gamesGroup = app.MapGroup("/games");
+var gamesGroup = app.MapGroup("/games")
+    .WithParameterValidation();
 
 gamesGroup.MapGet("/", () => games);
 
