@@ -16,15 +16,15 @@ namespace GameStore.Api.Endpoints
         public static RouteGroupBuilder MapGamesEndpoints(this IEndpointRouteBuilder routes)
         {
 
-            InMemGamesRepository repository = new();
+            
 
             // TODO: Define GET/POST/PUT/DELETE endpoints for Games here.
             var gamesGroup = routes.MapGroup("/games")
                                     .WithParameterValidation();
 
-            gamesGroup.MapGet("/", () => repository.GetAll());
+            gamesGroup.MapGet("/", (IGamesRepository repository) => repository.GetAll());
 
-            gamesGroup.MapGet("/{id}", (int id) =>
+            gamesGroup.MapGet("/{id}", (IGamesRepository repository,int id) =>
             {
                 Game? game = repository.Get(id);
 
@@ -37,7 +37,7 @@ namespace GameStore.Api.Endpoints
 
             }).WithName(GetGameEndpointName);
 
-            gamesGroup.MapPost("/", (Game game) =>
+            gamesGroup.MapPost("/", (IGamesRepository repository, Game game) =>
             {
                 repository.Create(game);
 
@@ -45,7 +45,7 @@ namespace GameStore.Api.Endpoints
 
             });
 
-            gamesGroup.MapPut("/{id}", (int id, Game updatedGame) =>
+            gamesGroup.MapPut("/{id}", (IGamesRepository repository, int id, Game updatedGame) =>
             {
                 Game? existingGame = repository.Get(id);
 
@@ -66,7 +66,7 @@ namespace GameStore.Api.Endpoints
 
             });
 
-            gamesGroup.MapDelete("/{id}", (int id) =>
+            gamesGroup.MapDelete("/{id}", (IGamesRepository repository, int id) =>
             {
                 Game? game = repository.Get(id);
 
